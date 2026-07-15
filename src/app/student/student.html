@@ -1,0 +1,130 @@
+﻿<div class="container-fluid py-4">
+  <h2 class="text-center mb-4">Student Management</h2>
+
+  <div class="row g-4">
+
+    <!-- Student Table -->
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-warning">
+          <h4 class="mb-0">Student List</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover bg-white">
+              <thead class="table-dark text-center">
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Pin Code</th>
+                  <th>Address 1</th>
+                  <th>Address 2</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (studentList.length === 0) {
+                <tr class="text-center">
+                  <td colspan="10">No student records found.</td>
+                </tr>
+                } @else {
+                @for (student of studentList; track student.studentId) {
+                <tr class="text-center">
+                  <td>{{ student.studentId }}</td>
+                  <td>{{ student.studName }}</td>
+                  <td>{{ student.mobileNo }}</td>
+                  <td>{{ student.email }}</td>
+                  <td>{{ student.city }}</td>
+                  <td>{{ student.state }}</td>
+                  <td>{{ student.pinCode }}</td>
+                  <td>{{ student.addressLine1 }}</td>
+                  <td>{{ student.addressLine2 }}</td>
+                  <td class="text-nowrap">
+                    <button type="button" class="btn btn-primary btn-sm"
+                      (click)="editStudent(student.studentId)">Edit</button>
+                    <button type="button" class="btn btn-danger btn-sm"
+                      (click)="deleteStudent(student.studentId)">Delete</button>
+                  </td>
+                </tr>
+                }
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Form -->
+    <div class="col-md-4">
+      <div class="card shadow">
+        <div class="card-header bg-warning">
+          <h4 class="mb-0">{{ formTitle }}</h4>
+        </div>
+
+        <div class="card-body">
+          <form (ngSubmit)="onSubmit()" #studentForm="ngForm">
+            <input type="hidden" [(ngModel)]="currentStudent.studentId" name="studentId" />
+
+            <div class="mb-3">
+              <label for="studName" class="form-label">Student Name</label>
+              <input type="text" class="form-control" id="studName" name="studName"
+                [(ngModel)]="currentStudent.studName" required />
+            </div>
+
+            <div class="mb-3">
+              <label for="mobileNo" class="form-label">Mobile Number</label>
+              <input type="tel" class="form-control" id="mobileNo" name="mobileNo" [(ngModel)]="currentStudent.mobileNo"
+                required />
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="currentStudent.email"
+                required />
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" name="city" [(ngModel)]="currentStudent.city" />
+              </div>
+              <div class="col-6 mb-3">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" id="state" name="state" [(ngModel)]="currentStudent.state" />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="pinCode" class="form-label">Pin Code</label>
+              <input type="text" class="form-control" id="pinCode" name="pinCode"
+                [(ngModel)]="currentStudent.pinCode" />
+            </div>
+
+            <div class="mb-3">
+              <label for="addressLine1" class="form-label">Address Line 1</label>
+              <input type="text" class="form-control" id="addressLine1" name="addressLine1"
+                [(ngModel)]="currentStudent.addressLine1" />
+            </div>
+
+            <div class="mb-3">
+              <label for="addressLine2" class="form-label">Address Line 2</label>
+              <input type="text" class="form-control" id="addressLine2" name="addressLine2"
+                [(ngModel)]="currentStudent.addressLine2" />
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-success flex-fill">Save</button>
+              <button type="button" class="btn btn-secondary flex-fill" (click)="resetForm()">Reset</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
