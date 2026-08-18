@@ -51,16 +51,27 @@ export class Student implements OnInit {
   currentStudent: StudentRecord = this.createEmptyStudent();
 
   onSubmit(): void {
-    this.http.post<StudentRecord[]>('https://localhost:7248/api/studentMaster', this.currentStudent).subscribe({
-      next: (result: any) => {
-        this.getAllStudent();
-      },
-      error: (err) => {
-        console.error('Error adding student records:', err);
-      }
-    });
-
-    this.resetForm();
+    if (this.currentStudent.studentId && this.currentStudent.studentId > 0) {
+      this.http.put<StudentRecord>(`https://localhost:7248/api/studentMaster/${this.currentStudent.studentId}`, this.currentStudent).subscribe({
+        next: () => {
+          this.getAllStudent();
+          this.resetForm();
+        },
+        error: (err) => {
+          console.error('Error updating student record:', err);
+        }
+      });
+    } else {
+      this.http.post<StudentRecord[]>('https://localhost:7248/api/studentMaster', this.currentStudent).subscribe({
+        next: (result: any) => {
+          this.getAllStudent();
+          this.resetForm();
+        },
+        error: (err) => {
+          console.error('Error adding student records:', err);
+        }
+      });
+    }
   }
 
   editStudent(studentId: number): void {
@@ -73,18 +84,21 @@ export class Student implements OnInit {
   deleteStudent(studentId: number): void {
     const confirmed = confirm('Are you sure you want to delete this student?');
     if (!confirmed) return;
-    this.studentList = this.studentList.filter(s => s.studentId !== studentId);
-    this.resetForm();
+
+    this.http.delete<StudentRecord>(`https://localhost:7248/api/studentMaster/${studentId}`).subscribe({
+      next: () => {
+        this.getAllStudent();
+        this.resetForm();
+      },
+      error: (err) => {
+        console.error('Error deleting student record:', err);
+      }
+    });
   }
 
   resetForm(): void {
     this.currentStudent = this.createEmptyStudent();
     this.formTitle = 'Add Student';
-  }
-
-  private generateStudentId(): number {
-    if (!this.studentList || this.studentList.length === 0) return 1;
-    return Math.max(...this.studentList.map(s => s.studentId)) + 1;
   }
 
   private createEmptyStudent(): StudentRecord {
